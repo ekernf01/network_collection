@@ -1,7 +1,7 @@
 library("magrittr") # for pipes
 
 EXPECTED_GRN_COLNAMES = c("regulator", "target", "weight")
-options(GRN_PATH = "networks")
+Sys.setenv(GRN_PATH = 'networks')
 
 #' Convert a function into a version of itself wrapped in a try block.
 #'
@@ -162,10 +162,11 @@ write_grn_by_subnetwork = function(
   grn_location %<>% paste0(., ".gz")
   grn_location %<>% gsub(".gz.gz", ".gz", .)
   try({
+    dir.create(dirname(grn_location), recursive = T, showWarnings = F)
     gz1 <- gzfile(grn_location, "w")
     write.table(grn_df, gz1, col.names = F, row.names = F, quote = F, sep=",")
+    close(gz1)
   })
-  close(gz1)
 }
 
 
@@ -218,3 +219,14 @@ count_regulator_intersections = function(grn_name, subnetwork_name, query_target
   # process all queries
   lapply(query_targets, get_predicted_regulators)
 }
+
+# Check setup
+check_networks_location = function(){
+  tryCatch(
+    invisible(load_grn_metadata()), 
+    error = function(e) {
+      message("Cannot find network metadata. Set options('GRN_PATH') to point to the folder containing 'published_networks.csv'.\nExample:\n    Sys.setenv(GRN_PATH = 'path/to/networks')")
+    }
+  )
+}
+check_networks_location()
