@@ -1,7 +1,7 @@
 library("magrittr") # for pipes
 
 EXPECTED_GRN_COLNAMES = c("regulator", "target", "weight")
-Sys.setenv(GRN_PATH = 'networks')
+options(GRN_PATH = 'networks')
 
 #' Convert a function into a version of itself wrapped in a try block.
 #'
@@ -225,7 +225,7 @@ check_networks_location = function(){
   tryCatch(
     invisible(load_grn_metadata()), 
     error = function(e) {
-      message("Cannot find network metadata. Set options('GRN_PATH') to point to the folder containing 'published_networks.csv'.\nExample:\n    Sys.setenv(GRN_PATH = 'path/to/networks')")
+      message("Cannot find network metadata. Set options('GRN_PATH') to point to the folder containing 'published_networks.csv'.\nExample:\n    options(GRN_PATH = 'path/to/networks')")
     }
   )
 }

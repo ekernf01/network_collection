@@ -30,7 +30,15 @@ def load_grn_by_subnetwork( grn_name, subnetwork_name, sort_by_weight = True ):
     raise ValueError("Error locating grn! Please report this error or check os.environ['GRN_PATH'].\n")
   
   X = pd.read_csv (grn_location, header = None ) 
+  
+  # add score of -1 if missing
+  if(X.shape[1] == 2):
+    X["weight"] = -1
+  
   X.set_axis(EXPECTED_GRN_COLNAMES, axis = 1, inplace = True)
+  # This saves mem for fat networks.
+  X[EXPECTED_GRN_COLNAMES[0]].astype("category")
+  X[EXPECTED_GRN_COLNAMES[1]].astype("category")
   return X 
 
 def load_grn_all_subnetworks(grn_name):
