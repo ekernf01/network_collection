@@ -42,7 +42,7 @@ load_networks.load_grn_by_subnetwork("gtex_rna", "Adipose_Subcutaneous.csv.gz").
 
 ### Storage format
 
-Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. The basic format looks like this. Edge weight of -1 means the network is unweighted.
+Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. Edge weight of -1 means the network is unweighted.
 
     regulator,target,edge_weight
     Pou5f1,Sox2,1
