@@ -40,6 +40,14 @@ load_networks.load_grn_by_subnetwork("gtex_rna", "Adipose_Subcutaneous.csv.gz").
 [load_networks.load_grn_by_subnetwork("gtex_rna", n).shape for n in load_networks.list_subnetworks('gtex_rna') ]
 ```
 
+### Installation 
+
+This collection is not yet set up for deployment to non-Eric users. Main obstacles:
+
+- The R code is loose scripts, not packages. 
+- The Python code is not pip-installable or conda-installable. But it's in this repo, and you can point sys.path.append to it.
+- The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/networks/.
+
 ### Storage format
 
 Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. Edge weight of -1 means the network is unweighted.
