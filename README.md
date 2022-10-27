@@ -1,6 +1,6 @@
 ### Using the networks
 
-This is a collection of pre-built gene regulatory networks. We offer R and Python code to quickly read and write tissue subnetworks and metadata from this collection. 
+This is a collection of pre-built gene regulatory networks. We offer R and Python code to quickly read and write tissue subnetworks and metadata from this collection. The loader code has minimal third-party dependencies (just `magrittr` and `arrow` in R and just `pandas` in python) and is tested inside of the benchmarking conda environment. See the benchmarking repo for more detail on that environment. 
 
 In R:
 
