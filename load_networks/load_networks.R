@@ -1,6 +1,7 @@
 library("magrittr") # for pipes
 
 EXPECTED_GRN_COLNAMES = c("regulator", "target", "weight")
+EXPECTED_OUTPUT_TYPES = c("tsv", "csv", "txt", "parquet")
 options(GRN_PATH = 'networks')
 
 #' Convert a function into a version of itself wrapped in a try block.
@@ -45,7 +46,7 @@ iterate_over_grns = function( INNERFUN, omit = NULL, include = NULL, ...){
 #' Apply a function to all subnetworks from a given source.
 #' 
 #' 
-iterate_within_grn = function(grn_name, INNERFUN, test = F, omit = NULL, restrict_to_subnet = NULL, ...){
+iterate_within_grn = function(grn_name, INNERFUN, test = F, omit = NULL, restrict_to_subnet = NULL, mc.cores = 14, ...){
   cat("\n\n", grn_name, "\n")
   available_subnetworks = list_subnetworks(grn_name)
   available_subnetworks %<>% setdiff(omit)
@@ -64,7 +65,7 @@ iterate_within_grn = function(grn_name, INNERFUN, test = F, omit = NULL, restric
                      available_subnetworks, 
                      MoreArgs = list(...),
                      SIMPLIFY = F,
-                     mc.cores = 14) %>%
+                     mc.cores = mc.cores) %>%
     setNames(available_subnetworks)
 }
 
@@ -82,8 +83,11 @@ load_grn_by_subnetwork = function( grn_name, subnetwork_name, sort_by_weight = T
     X = read.table(grn_location, header = F, row.names = NULL, stringsAsFactors = F, ... )
   } else if (extension=="csv"){
     X = read.csv  (grn_location, header = F, row.names = NULL, stringsAsFactors = F, ... ) 
+  } else if (extension=="parquet"){
+    # TODO: handle .parquet.gz, which currently will stampede through uncaught.
+    X = arrow::read_parquet(grn_location) 
   } else {
-    stop("Unknown format!")
+    stop(paste("Unknown format! Use one of: \n", paste(collapse = " ", EXPECTED_OUTPUT_TYPES), "\n (gzipped is ok for txt, csv, tsv)"))
   }
   
   # add score of -1 if missing
@@ -130,14 +134,15 @@ validate_grn = function( grn_name, subnetwork_name, grn_df = NULL, ... ){
   return(T)
 }
 
-#' (Over)write a subnetwork file. Default writes the same edges already present, but in a predictable format. 
+#' (Over)write a subnetwork file. Default behavior: write the same edges already present, but in a predictable format. 
 #'
 #' @param grn_df Dataframe with columns regulator, target, weight, in that order!
 #'
 write_grn_by_subnetwork = function( 
   grn_name,
   subnetwork_name, 
-  grn_df = load_grn_by_subnetwork( grn_name, subnetwork_name )
+  grn_df = load_grn_by_subnetwork( grn_name, subnetwork_name ), 
+  format_out = ".parquet"
 ){
   validate_grn(grn_name, subnetwork_name, grn_df)
   # The hardest thing here is if it's stored as target-first, but given to this function as 
@@ -157,18 +162,26 @@ write_grn_by_subnetwork = function(
   }
   
   grn_location = file.path(getOption("GRN_PATH"), grn_name, "networks", subnetwork_name) 
-  grn_location %<>% gsub(".txt", ".csv", .)
-  grn_location %<>% gsub(".tsv", ".csv", .)
-  grn_location %<>% paste0(., ".gz")
-  grn_location %<>% gsub(".gz.gz", ".gz", .)
-  try({
-    dir.create(dirname(grn_location), recursive = T, showWarnings = F)
-    gz1 <- gzfile(grn_location, "w")
-    write.table(grn_df, gz1, col.names = F, row.names = F, quote = F, sep=",")
-    close(gz1)
-  })
+  for(ot in EXPECTED_OUTPUT_TYPES){
+    grn_location %<>% gsub("\\.gz", "", .)
+    grn_location %<>% gsub(paste0("\\.", ot, "$"), format_out, .)
+  }
+  if(format_out==".csv.gz"){
+    try({
+      dir.create(dirname(grn_location), recursive = T, showWarnings = F)
+      gz1 <- gzfile(grn_location, "w")
+      write.table(grn_df, gz1, col.names = F, row.names = F, quote = F, sep=",")
+      close(gz1)
+    })
+  } else if(format_out==".parquet"){
+    try({
+      dir.create(dirname(grn_location), recursive = T, showWarnings = F)
+      arrow::write_parquet(grn_df, grn_location)
+    })
+  } else {
+    stop("Unknown output format. Use '.csv.gz' or '.parquet.'")
+  }
 }
-
 
 retrieve_targets_all = function(grn_name, subnetwork_name, query_regulators, target_only = T, ... ){
   cat(grn_name, " ", subnetwork_name, "\n")
