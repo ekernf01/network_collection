@@ -29,7 +29,7 @@ def load_grn_by_subnetwork( grn_name, subnetwork_name, sort_by_weight = True ):
   if not os.path.exists(grn_location):
     raise ValueError("Error locating grn! Please report this error or check os.environ['GRN_PATH'].\n")
   
-  X = pd.read_csv (grn_location, header = None ) 
+  X = pd.read_parquet( grn_location ) 
   
   # add score of -1 if missing
   if(X.shape[1] == 2):
