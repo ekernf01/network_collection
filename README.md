@@ -46,7 +46,7 @@ This collection is not yet set up for deployment to non-Eric users. Main obstacl
 
 - The R code is loose scripts, not packages. 
 - The Python code is not pip-installable or conda-installable. But it's in this repo, and you can point sys.path.append to it.
-- The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/networks/.
+- The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at `s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/networks/`.
 
 ### Storage format
 
