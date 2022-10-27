@@ -13,6 +13,8 @@
 # We hope they will increase the transparency of our project despite it not
 # being fully automated. 
 
+# These get all the right info, but often in a clumsy or irregular format. 
+
 # These are older and they may assume the wrong working directory.
 source( "setup/cellnet.R")
 source( "setup/chea.R")
@@ -23,3 +25,18 @@ source( "setup/reg_net_dot_org.R")
 # These are newer and should be fine.
 source( "setup/FANTOM4.R")
 source( "setup/ananse.R")
+
+# These reformat all networks from any format used during the project to the latest.
+for (netName in load_grn_metadata()[["name"]]){
+  cat("\n", netName)
+  subnetworks = list_subnetworks(netName) 
+  for(subNet in subnetworks){
+     cat(".")
+     write_grn_by_subnetwork(netName, subNet)
+  }
+}
+
+# Check the results
+for (netName in load_grn_metadata()[["name"]]){
+  iterate_within_grn(netName, validate_grn)
+}
