@@ -60,7 +60,7 @@ The data used to have some differences: gzipped/not, comma/tab delimited, target
 
 ### Source data 
 
-Source URL's are given in the metadata file. The setup is not fully automated, but large parts of it are, and scripts are given in the `setup` folder (start with `main.R`). A few notes on specific networks:
+Source URL's, citations, and descriptions are given in the [metadata file](https://github.com/ekernf01/network_collection/blob/main/networks/published_networks.csv). The setup is not fully automated, but large parts of it are, and scripts are given in the `setup` folder (start with `main.R`). A few notes on specific networks:
 
 - For CellOracle, I installed the package, which ships with a default base network. Then there's a setup script that does the formatting and gzipping. No point-and-click downloads needed.
 - Networks from FNTM and Humanbase were subsetted to retain only edges with posterior probability over 50%. See setup script; no point-and-click downloads needed.
