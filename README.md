@@ -1,6 +1,6 @@
 ### Using the networks
 
-This is a collection of pre-built gene regulatory networks. We offer R and Python code to quickly read and write tissue subnetworks and metadata from this collection. The loader code has minimal third-party dependencies (just `magrittr` and `arrow` in R and just `pandas` in python) and is tested inside of the benchmarking conda environment. See the benchmarking repo for more detail on that environment. 
+This is a collection of pre-built gene regulatory networks. We offer R and Python code to quickly read and write tissue subnetworks and metadata from this collection. The loader code has minimal third-party dependencies (just `magrittr` and `arrow` in R and just `pandas` and `duckdb` in python) and is tested inside of the benchmarking conda environment. See the benchmarking repo for more detail on that environment. Both API's just return dataframes, though we are extending the Python API to return lightweight objects that refer to files on disk.
 
 In R:
 
@@ -35,9 +35,12 @@ load_networks.load_grn_metadata()
 load_networks.list_subnetworks("gtex_rna")
 [ load_networks.list_subnetworks(n)[0] for n in load_networks.load_grn_metadata()['name'] ]
 # Show me the edges for a tissue. 
-load_networks.load_grn_by_subnetwork("gtex_rna", "Adipose_Subcutaneous.csv.gz").head()
+load_networks.load_grn_by_subnetwork("gtex_rna", "Adipose_Subcutaneous.parquet").head()
 # Show me the edges for all tissues in one network.
 [load_networks.load_grn_by_subnetwork("gtex_rna", n).shape for n in load_networks.list_subnetworks('gtex_rna') ]
+# Lightweight API
+load_networks.LightNetwork("gtex_rna").get_regulators("GAPDH")
+load_networks.LightNetwork("gtex_rna", ["Adipose_Subcutaneous.parquet"]).get_regulators("GAPDH")
 ```
 
 ### Installation 
@@ -48,11 +51,13 @@ This collection is not yet set up for deployment to non-Eric users. Main obstacl
 - The Python code is not pip-installable or conda-installable. But it's in this repo, and you can point sys.path.append to it.
 - The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at `s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/network_collection/`.
 
+Recommended for now: clone the repo, then find the `networks` folder on AWS and use it to replace the `networks` folder in this repo.
+
 ### Storage format
 
 Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. Edge weight of -1 means the network is unweighted.
 
-    regulator,target,edge_weight
+    regulator,target,weight
     Pou5f1,Sox2,1
     ...
 
