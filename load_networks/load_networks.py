@@ -1,6 +1,9 @@
 import pandas as pd 
 import duckdb
 import os 
+import gc
+import numpy as np
+
 EXPECTED_GRN_COLNAMES = ["regulator", "target", "weight"]
 
 
@@ -214,4 +217,72 @@ def validate_grn(
   assert al( [grn_df.columns[i] == EXPECTED_GRN_COLNAMES[i] for i in range(3)])
   return True
 
+
+
+
+def networkEdgesToMatrix(networkEdges, regulatorColumn=0, targetColumn=1):
+    """Reformat a network from a two-column dataframe to the way that celloracle needs its input."""
+    X = pd.crosstab(networkEdges.iloc[:,targetColumn], networkEdges.iloc[:,regulatorColumn])
+    del networkEdges
+    gc.collect()
+    X = 1.0*(X > 0)
+    X = X.rename_axis('gene_short_name').reset_index()
+    X = X.rename_axis('peak_id').reset_index()
+    X = makeNetworkSparse(X, 0.0)
+    gc.collect()
+    return X
+
+humanTFs = pd.read_csv("../accessory_data/humanTFs.csv")
+
+def pivotNetworkWideToLong(network_wide: pd.DataFrame):
+    """Convert from CellOracle's preferred format to a triplet format
+
+    Args:
+        network_wide (pd.DataFrame): GRN structure in CellOracle's usual format
+    """
+    network_long = pd.concat([
+        pd.DataFrame({
+            "regulator": tf,
+            "target": network_wide.loc[network_wide[tf]==1, "gene_short_name"],
+            "weight": 1,
+        })
+        for tf in network_wide.columns[2:]
+    ])
+    return network_long
+
+def makeRandomNetwork(targetGenes, density = 0, seed = 0, TFs = humanTFs['HGNC symbol'] ):
+    """Generate a random network formatted the way that celloracle needs its input."""
+    np.random.seed(seed)
+    X = pd.DataFrame(
+            np.random.binomial(
+                n = 1, 
+                p=density,
+                size=(
+                    len(targetGenes), 
+                    len(TFs)
+                )
+            ),
+            columns = TFs, 
+            index = targetGenes
+        )
+    X.rename_axis('gene_short_name', inplace=True)
+    X.reset_index(inplace=True)
+    X.rename_axis('peak_id', inplace=True)
+    X.reset_index(inplace=True)
+    # CellOracle's preferred format wastes gobs of memory unless you sparsify.
+    X = makeNetworkSparse(X, round(density))
+    gc.collect()
+    return X
+
+
+def makeNetworkSparse(X, defaultValue):
+    """Save memory by making a sparse representation of a base network"""
+    X.iloc[:,2:] = X.iloc[:,2:].astype(pd.SparseDtype("float", defaultValue))
+    return X
+
+
+def makeNetworkDense(X):
+    """Undo makeNetworkSparse"""
+    X.iloc[:, 2:] = np.array(X.iloc[:, 2:])   #undo sparse representation         
+    return X
 
