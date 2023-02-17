@@ -1,8 +1,10 @@
+This is a collection of pre-built gene regulatory networks, accompanied by the code used to acquire and clean the data. This part of our [benchmarking project](https://github.com/ekernf01/perturbation_writing).
+
 ### Using the networks
 
-This is a collection of pre-built gene regulatory networks. We offer R and Python code to quickly read and write tissue subnetworks and metadata from this collection. The loader code has minimal third-party dependencies (just `magrittr` and `arrow` in R and just `pandas` and `duckdb` in python) and is tested inside of the benchmarking conda environment. See the benchmarking repo for more detail on that environment. Both API's just return dataframes, though we are extending the Python API to return lightweight objects that refer to files on disk.
+For the Python API, consult the [companion package](https://github.com/ekernf01/load_networks).
 
-In R:
+There is also an unfinished R API included as a script in this folder. Usage:
 
 ```
 source("R/load_networks.R")
@@ -21,37 +23,13 @@ iterate_within_grn("gtex_rna", load_grn_by_subnetwork) %>% sapply(dim)
 # iterate_over_grns(load_grn_by_subnetwork) %>% sapply(nrow)
 ```
 
-In Python:
-
-```
-# Set this to point to the "load_networks" folder inside the "networks" folder adjacent to this README. 
-sys.path.append('path/to/load_networks/') 
-import load_networks
-# Set this to point to the "networks" folder adjacent to this README. 
-os.environ["GRN_PATH"] = "networks"
-# What networks are available?
-load_networks.load_grn_metadata()
-# What tissues do they cover, or how many?
-load_networks.list_subnetworks("gtex_rna")
-[ load_networks.list_subnetworks(n)[0] for n in load_networks.load_grn_metadata()['name'] ]
-# Show me the edges for a tissue. 
-load_networks.load_grn_by_subnetwork("gtex_rna", "Adipose_Subcutaneous.parquet").head()
-# Show me the edges for all tissues in one network.
-[load_networks.load_grn_by_subnetwork("gtex_rna", n).shape for n in load_networks.list_subnetworks('gtex_rna') ]
-# Lightweight API
-load_networks.LightNetwork("gtex_rna").get_regulators("GAPDH")
-load_networks.LightNetwork("gtex_rna", ["Adipose_Subcutaneous.parquet"]).get_regulators("GAPDH")
-```
-
 ### Installation 
 
-This collection is not yet set up for deployment to non-Eric users. Main obstacles:
-
-- The R code is loose scripts, not packages. 
-- The Python code is not pip-installable or conda-installable. But it's in this repo, and you can point sys.path.append to it.
-- The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at `s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/network_collection/`.
+The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at `s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/network_collection/`.
 
 Recommended for now: clone the repo, then find the `networks` folder on AWS and use it to replace the `networks` folder in this repo.
+
+Eventually, once it's public: probably a zenodo link.
 
 ### Storage format
 
@@ -80,7 +58,6 @@ Source URL's, citations, and descriptions are given in the [metadata file](https
 
 ### Layout
 
-- `load_networks`: Code to access these networks
 - `networks`: Networks stored in triplet format
 - `not_ready`: Dataset that we may in the future process into triplet format
 - `setup`: code we used to assemble and format this collection.
