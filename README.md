@@ -6,7 +6,7 @@ For the Python API, consult the [companion package](https://github.com/ekernf01/
 
 There is also an unfinished R API included as a script in this folder. Usage:
 
-```
+```r
 source("R/load_networks.R")
 # Set this to point to the "networks" folder adjacent to this README. 
 options(GRN_PATH = "networks")

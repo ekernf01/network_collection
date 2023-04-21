@@ -26,7 +26,7 @@ source( "setup/reg_net_dot_org.R")
 source( "setup/FANTOM4.R")
 source( "setup/ananse.R")
 
-# These reformat all networks from any format used during the project to the latest.
+# These reformat all networks from any format previously used during the project to the latest.
 for (netName in load_grn_metadata()[["name"]]){
   cat("\n", netName)
   subnetworks = list_subnetworks(netName) 
