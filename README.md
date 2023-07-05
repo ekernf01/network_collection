@@ -1,4 +1,4 @@
-This is a collection of pre-built gene regulatory networks, accompanied by the code used to acquire and clean the data. This part of our [benchmarking project](https://github.com/ekernf01/perturbation_writing).
+This is a collection of pre-built gene regulatory networks, accompanied by the code used to acquire and clean the data. This part of our [benchmarking project](https://github.com/ekernf01/perturbation_benchmarking).
 
 ### Using the networks
 
@@ -25,11 +25,7 @@ iterate_within_grn("gtex_rna", load_grn_by_subnetwork) %>% sapply(dim)
 
 ### Installation 
 
-The networks themselves are too big to put on GitHub. But they are on Patrick's AWS at `s3://cahanlab/eric.kernfeld/eric_laptop/research/projects/perturbation_prediction/cell_type_knowledge_transfer/network_collection/`.
-
-Recommended for now: clone the repo, then find the `networks` folder on AWS and use it to replace the `networks` folder in this repo.
-
-Eventually, once it's public: probably a zenodo link.
+The networks themselves are too big to put on GitHub. Download from Zenodo (DOI: 10.5281/zenodo.8071809).
 
 ### Storage format
 

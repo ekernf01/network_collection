@@ -19,7 +19,7 @@ reformat_ananse = function(downloaded_file_name){
   X$target %<>% factor
   X$regulator %<>% factor
   write_grn_by_subnetwork(grn_name = network_name, subnetwork_name = tissue_name, grn_df = X)
-  write_grn_by_subnetwork(grn_name = paste0(network_name, "_0.5"), subnetwork_name = tissue_name, grn_df = subset(X, weight>=0.8))
+  write_grn_by_subnetwork(grn_name = paste0(network_name, "_0.8"), subnetwork_name = tissue_name, grn_df = subset(X, weight>=0.8))
 }
 for( celltype in c("astrocyte",
                  "fibroblast",
