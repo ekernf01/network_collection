@@ -4,7 +4,7 @@ This is a collection of pre-built gene regulatory networks, accompanied by the c
 
 For the Python API, consult the [companion package](https://github.com/ekernf01/load_networks).
 
-There is also an unfinished R API included as a script in this folder. Usage:
+There is also an R API included as a script in this folder. Usage:
 
 ```r
 source("R/load_networks.R")
