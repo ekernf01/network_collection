@@ -25,17 +25,17 @@ iterate_within_grn("gtex_rna", load_grn_by_subnetwork) %>% sapply(dim)
 
 ### Installation 
 
-The networks themselves are too big to put on GitHub. Download from Zenodo (DOI: 10.5281/zenodo.8071809).
+The networks themselves are too big to put on GitHub. Download them from Zenodo (DOI: 10.5281/zenodo.8071809).
 
-### Storage format
+### Storage format and adding new networks
 
-Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. Edge weight of -1 means the network is unweighted.
+Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. An edge weight of -1 means the network is unweighted.
 
     regulator,target,weight
     Pou5f1,Sox2,1
     ...
 
-The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
+To add a new collection of networks, add a row to `networks/published_networks.csv` and save three-column Parquet files in the above format. For examples, look in the `setup` folder. The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
 
 ### Source data 
 
