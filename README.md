@@ -25,7 +25,7 @@ iterate_within_grn("gtex_rna", load_grn_by_subnetwork) %>% sapply(dim)
 
 ### Installation 
 
-The networks themselves are too big to put on GitHub. Download them from Zenodo (DOI: 10.5281/zenodo.8071809).
+The networks themselves are too big to put on GitHub. Download them from Zenodo (DOI: 10.5281/zenodo.10363068).
 
 ### Storage format and adding new networks
 
@@ -39,7 +39,7 @@ To add a new collection of networks, add a row to `networks/published_networks.c
 
 ### Source data 
 
-Source URL's, citations, and descriptions are given in the [metadata file](https://github.com/ekernf01/network_collection/blob/main/networks/published_networks.csv). The setup is not fully automated, but large parts of it are, and scripts are given in the `setup` folder (start with `main.R`). A few notes on specific networks:
+Source URL's, citations, and descriptions are given in `networks/published_networks.csv`. The setup is not fully automated, but large parts of it are, and scripts are given in the `setup` folder (start with `main.R`). A few notes on specific networks:
 
 - For CellOracle, I installed the package, which ships with a default base network. Then there's a setup script that does the formatting and gzipping. No point-and-click downloads needed.
 - Networks from FNTM and Humanbase were subsetted to retain only edges with posterior probability over 50%. See setup script; no point-and-click downloads needed.
@@ -54,6 +54,17 @@ Source URL's, citations, and descriptions are given in the [metadata file](https
 
 ### Layout
 
-- `networks`: Networks stored in triplet format
-- `not_ready`: Dataset that we may in the future process into triplet format
+- `networks`: Networks stored in triplet format. This is the only folder accessed by our benchmarking project.
+- `not_ready`: Datasets that we may in the future process into triplet format, or raw downloads that we did already process.
 - `setup`: code we used to assemble and format this collection.
+
+### Networks that we may ingest in the future
+
+- [NGS-QC ChIP database](https://www.biorxiv.org/content/10.1101/303842v2.full.pdf), https://ngsqc.org/applications.php, also used [here](https://www.nature.com/articles/s41540-018-0066-z)
+- [DoRothEA](https://saezlab.github.io/dorothea/articles/single_cell_vignette.html) (`BiocManager::install("dorothea")`)
+- [TRRUST](https://www.grnpedia.org/trrust/downloadnetwork.php) ("Transcriptional Regulatory Relationships Unraveled by Sentence-based Text mining")
+- chip-atlas?
+- remap?
+- RegNetwork http://www.regnetworkweb.org/home.jsp (transcription factor and microRNA mediated gene regulations)
+- mouse atlas regulons: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6281296/ and there may be other examples like this
+- gTEX has more modern options than our current gTEX-derived networks, including by Ashis Saha and by the Englehardt lab
