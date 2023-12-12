@@ -1,7 +1,10 @@
 #' Tidy up the formatting of the gtex coexpression networks. 
-#'
-fix_gtex_rna = function(grn_name){
-  where = here("networks", grn_name, "networks")
+#' The files are originally named 1-35 and we want to label them by tissue.
+#' Also, they are symmetric in nature and only 1/2 the edges are explicitly stored, so we symmetrize.
+#' This should leave behind both .parquet and .txt files. You can delete all the txt's. 
+
+fix_gtex_rna_filenames = function(){
+  where = here::here("networks", "gtex_rna", "networks")
   names_current = list.files( where, full.names = T)
   numbers_current = names_current %>% basename %>% gsub("^.*_", "", .) %>% as.numeric
   tissues = read.table( sep = "\t", file = file.path(dirname(where), "gtex_rna_tissue_names.txt"))[[1]]
@@ -14,6 +17,17 @@ fix_gtex_rna = function(grn_name){
   names_desired = names_desired[order(numbers_tissues)]
   
   file.rename(from = names_current, to = names_desired)
-  lapply(names_desired, function(my_chubby_file) system(paste("gzip", my_chubby_file)))
 }
-fix_gtex_rna(grn_name = "gtex_rna")
+
+make_gtex_networks_symmetric = function(){
+  for(tissue in list_subnetworks("gtex_rna")){
+    X = load_grn_by_subnetwork( "gtex_rna", tissue)
+    X = rbind(X, setNames(X[c(2,1,3)], colnames(X)))
+    X = X[!duplicated(X),]
+    write_grn_by_subnetwork( "gtex_rna", tissue, grn_df = X )
+  }
+}
+
+fix_gtex_rna_filenames()
+make_gtex_networks_symmetric()
+
