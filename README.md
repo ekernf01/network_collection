@@ -35,7 +35,9 @@ Metadata are stored in `networks/published_networks.csv`. `networks` also contai
     Pou5f1,Sox2,1
     ...
 
-To add a new collection of networks, add a row to `networks/published_networks.csv` and save three-column Parquet files in the above format. For examples, look in the `setup` folder. The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
+The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
+
+To add a new collection of networks, add a row to `networks/published_networks.csv` and save three-column Parquet files in the above format. For examples, look in the `setup` folder. 
 
 ### Source data 
 
