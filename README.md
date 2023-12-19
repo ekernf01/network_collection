@@ -27,7 +27,7 @@ iterate_within_grn("gtex_rna", load_grn_by_subnetwork) %>% sapply(dim)
 
 The networks themselves are too big to put on GitHub. Download them from Zenodo (DOI: 10.5281/zenodo.10363068).
 
-### Storage format and adding new networks
+### Storage format
 
 Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. An edge weight of -1 means the network is unweighted.
 
@@ -37,7 +37,9 @@ Metadata are stored in `networks/published_networks.csv`. `networks` also contai
 
 The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
 
-To add a new collection of networks, add a row to `networks/published_networks.csv` and save three-column Parquet files in the above format. For examples, look in the `setup` folder. 
+### Adding new networks
+
+To add a new collection of networks, add a row to `networks/published_networks.csv` and save three-column Parquet files in the above format. For examples, look in the `setup` folder. To test your network, try out the loader commands for the R or python API's mentioned above. You should be able to load the networks into R or Python and query them to verify any individual edge.
 
 ### Source data 
 
