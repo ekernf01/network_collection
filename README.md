@@ -29,13 +29,13 @@ The networks themselves are too big to put on GitHub. Download them from Zenodo 
 
 ### Storage format
 
-Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The basic format looks like this. An edge weight of -1 means the network is unweighted.
+Metadata are stored in `networks/published_networks.csv`. `networks` also contains a set of published GRN's stored uniformly. Each network is stored as `<source_name>/networks/<subnetwork_name>.csv.gz`. (UPDATE: now `.parquet`.) The file format has three columns called 'regulator', 'target', and 'weight'. An edge weight of -1 means the network is unweighted.
 
     regulator,target,weight
     Pou5f1,Sox2,1
     ...
 
-The data used to have some differences: gzipped/not, comma/tab delimited, target-first versus regulator-first. These have all been worked out but you may see out of date descriptions in the original README files, which are still included with some networks.
+There is an optional fourth column, `cell_type`.
 
 ### Adding new networks
 
