@@ -2,7 +2,7 @@ This is a collection of pre-built gene regulatory networks, accompanied by the c
 
 ### Using the networks
 
-For the Python API, consult the [companion package](https://github.com/ekernf01/load_networks).
+For the Python API, consult the [companion package](https://github.com/ekernf01/pereggrn_networks).
 
 There is also an R API included as a script in this folder. Usage:
 

@@ -1,0 +1,3 @@
+networks/*
+!networks/published_networks.csv
+not_ready/*
