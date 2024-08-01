@@ -1,3 +1,4 @@
 networks/*
 !networks/published_networks.csv
 not_ready/*
+setup/genga_definitive_endoderm_ATAC/from_to_docker/*
